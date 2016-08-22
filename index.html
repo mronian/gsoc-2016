@@ -144,17 +144,6 @@ hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>
 
 <p>After working on exposure correction, I began with the other major chunk of my proposal which was ImageFeatures.jl. Edge and corner detection was already a part of Images.jl so I added some of my work in the same to Images.jl itself (this will be moved to ImageFeatures.jl before release). </p>
 
-<p>I started ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. </p>
-
-<div class="highlight highlight-source-julia"><pre>keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span>(img, params)</pre></div>
-
-<p>The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>censure_params &lt;: CENSURE</code></p>
-
-<div class="highlight highlight-source-julia"><pre>descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, params)
-descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, params)</pre></div>
-
-<p>Depending on the algorithm , the <code>create_descriptor</code> API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>brief_params &lt;: BRIEF</code></p>
-
 <h3>
 <a id="canny-edge-detection" class="anchor" href="#canny-edge-detection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Canny Edge Detection</h3>
 
@@ -167,6 +156,30 @@ descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create
 
 <h3>
 <a id="fast-corners" class="anchor" href="#fast-corners" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAST Corners</h3>
+
+<p>FAST (Features from Accelerated Segment Test) corners, an efficient and very popular corner detection algorithm works by finding a contiguous set of pixels brighter or darker than the candidate pixel. Depending on the number of contiguous pixels found, the candidate is marked as a potential corner. </p>
+
+<h3>
+<a id="imagefeaturesjl-framework" class="anchor" href="#imagefeaturesjl-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageFeatures.jl Framework</h3>
+
+<p>I started work on ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. </p>
+
+<p>The <code>Feature</code> and <code>Keypoint</code> types are the fundamental types in ImageFeatures.jl. <code>Feature</code> stores the <code>keypoint</code> and its <code>orientation</code> and <code>scale</code>. A vector of the <code>Feature</code> type is denoted by the <code>Features</code> type and similary a vector of <code>Keypoint</code> type is denoted by the <code>Keypoints</code> type. We provide multiple methods for easily transitioning between the two types. </p>
+
+<p><code>Keypoints</code> or <code>Features</code> can be generate from an image of boolean values by <code>Keypoints(boolean_image)</code> or <code>Features(boolean_image)</code> where the boolean_image may be obtained from a feature detection algorithm for eg. the result of a corner detector. All feature detectors in ImageFeatures.jl directly return <code>Features</code>.</p>
+
+<p>A keypoint may be converted to a feature or vice versa by directly passing it to the respective method eg. <code>Keypoint(feature_A)</code> or <code>Feature(keypoint_A)</code>.</p>
+
+<p>The algorithms in ImageFeatures.jl are to be used by calling the <code>extract_features</code> and <code>create_descriptor</code> APIs.</p>
+
+<div class="highlight highlight-source-julia"><pre>keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span>(img, params)</pre></div>
+
+<p>The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>censure_params &lt;: CENSURE</code></p>
+
+<div class="highlight highlight-source-julia"><pre>descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, params)
+descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, params)</pre></div>
+
+<p>Depending on the algorithm , the <code>create_descriptor</code> API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>brief_params &lt;: BRIEF</code></p>
 
 <h3>
 <a id="brief-descriptors" class="anchor" href="#brief-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BRIEF Descriptors</h3>
