@@ -86,7 +86,33 @@ The `xblocks` and `yblocks` specify the number of blocks to divide the input ima
 
 After working on exposure correction, I began with the other major chunk of my proposal which was ImageFeatures.jl. Edge and corner detection was already a part of Images.jl so I added some of my work in the same to Images.jl itself (this will be moved to ImageFeatures.jl before release). 
 
-I started ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. 
+### Canny Edge Detection
+
+The canny edge detector works by finding intensity gradients of an image and then double thresholding pixels as being part of weak or strong edges. Then the weak edges not connected to any strong edge are discarded and the result has the edges detected in the image.
+
+```julia
+canny_edges = canny(img, sigma = 1.4, upperThreshold = 0.80, lowerThreshold = 0.20)
+```
+
+### Corner Detection
+
+
+
+### FAST Corners
+
+FAST (Features from Accelerated Segment Test) corners, an efficient and very popular corner detection algorithm works by finding a contiguous set of pixels brighter or darker than the candidate pixel. Depending on the number of contiguous pixels found, the candidate is marked as a potential corner. 
+
+### ImageFeatures.jl Framework
+
+I started work on ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. 
+
+The `Feature` and `Keypoint` types are the fundamental types in ImageFeatures.jl. `Feature` stores the `keypoint` and its `orientation` and `scale`. A vector of the `Feature` type is denoted by the `Features` type and similary a vector of `Keypoint` type is denoted by the `Keypoints` type. We provide multiple methods for easily transitioning between the two types. 
+
+`Keypoints` or `Features` can be generate from an image of boolean values by `Keypoints(boolean_image)` or `Features(boolean_image)` where the boolean_image may be obtained from a feature detection algorithm for eg. the result of a corner detector. All feature detectors in ImageFeatures.jl directly return `Features`.
+
+A keypoint may be converted to a feature or vice versa by directly passing it to the respective method eg. `Keypoint(feature_A)` or `Feature(keypoint_A)`.
+
+The algorithms in ImageFeatures.jl are to be used by calling the `extract_features` and `create_descriptor` APIs.
 
 ```julia
 keypoints = extract_features(img, params)
@@ -101,18 +127,6 @@ descriptor, ret_keypoints = create_descriptor(img, keypoints, params)
 ```
 
 Depending on the algorithm , the `create_descriptor` API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The `params` argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. `brief_params <: BRIEF`
-
-### Canny Edge Detection
-
-The canny edge detector works by finding intensity gradients of an image and then double thresholding pixels as being part of weak or strong edges. Then the weak edges not connected to any strong edge are discarded and the result has the edges detected in the image.
-
-```julia
-canny_edges = canny(img, sigma = 1.4, upperThreshold = 0.80, lowerThreshold = 0.20)
-```
-
-### Corner Detection
-
-### FAST Corners
 
 ### BRIEF Descriptors
 
