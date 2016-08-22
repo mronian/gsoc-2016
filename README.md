@@ -2,6 +2,12 @@
 
 <sub>[Summary of Contributions](#summary-of-contributions) | [Before the Coding Period](#before-the-coding-period) | [Exposure Correction](#exposure-correction) | [Feature Extraction](#feature-extraction) | [Miscelleanous](#miscellaneous)</sub>
 
+My proposal for this summer was to work on [ImageFeatures.jl](https://github.com/JuliaImages/ImageFeatures.jl), a new Julia package for Feature Extraction and Descriptors in Images. Alongside this, I planned to add Exposure Correction functionality to [Images.jl](https://github.com/timholy/Images.jl), an existing package for Image Processing in Julia.
+
+As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer abd be able to work with amazing people in the [JuliaImages](https://github.com/JuliaImages) organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.
+
+I would like to thank my mentors [Tim Holy](https://github.com/timholy) and [Simon Danisch](https://github.com/SimonDanisch) for helping me out throughout the summer and guiding me towards achieving my goals. Their friendliness and approachability made the summer a enjoyable and fruitful experience.
+
 ######[Link to Proposal](https://docs.google.com/document/d/1XD_fpT6YpyK6Iv2Rues2RlU-15l4aBbUZTSz1V216pw/edit?usp=sharing)
 
 ## Summary of Contributions
