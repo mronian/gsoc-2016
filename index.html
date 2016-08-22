@@ -22,7 +22,7 @@
       <h1>
 <a id="google-summer-of-code-2016" class="anchor" href="#google-summer-of-code-2016" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Google Summer of Code 2016</h1>
 
-<p><sub><a href="#summary-of-contributions">Summary of Contributions</a> | <a href="#before-the-coding-period">Before the Coding Period</a> | <a href="#exposure-correction">Exposure Correction</a> | <a href="#feature-extraction">Feature Extraction</a> | <a href="#miscellaneous">Miscelleanous</a></sub></p>
+<p><sub><a href="#before-the-coding-period">Before the Coding Period</a> | <a href="#summary-of-contributions">Summary of Contributions</a> | <a href="#exposure-correction">Exposure Correction</a> | <a href="#feature-extraction">Feature Extraction</a> | <a href="#miscellaneous">Miscelleanous</a> | <a href="#future-work">Future Work</a></sub></p>
 
 <p>My <a href="https://docs.google.com/document/d/1XD_fpT6YpyK6Iv2Rues2RlU-15l4aBbUZTSz1V216pw/edit?usp=sharing">proposal</a> for this summer was to work on <a href="https://github.com/JuliaImages/ImageFeatures.jl">ImageFeatures.jl</a>, a new Julia package for Feature Extraction and Descriptors in Images. Alongside this, I planned to add Exposure Correction functionality to <a href="https://github.com/timholy/Images.jl">Images.jl</a>, an existing package for Image Processing in Julia.</p>
 
@@ -131,11 +131,36 @@ hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>
 <h3>
 <a id="contrast-limited-adaptive-histogram-equalisation" class="anchor" href="#contrast-limited-adaptive-histogram-equalisation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contrast Limited Adaptive Histogram Equalisation</h3>
 
+<p>An advanced version of histogram equalisation, it differs from ordinary histogram equalization in the respect that the adaptive method computes several histograms, each corresponding to a distinct section of the image, and uses them to redistribute the lightness values of the image. It is therefore suitable for improving the local contrast and enhancing the definitions of edges in each region of an image.</p>
+
+<p>In the straightforward form, CLAHE is done by calculation a histogram of a window around each pixel and using the transformation function of the equalised histogram to rescale the pixel. Since this is computationally expensive, we use interpolation which gives a significant rise in efficiency without compromising the result. The image is divided into a grid and equalised histograms are calculated for each block. Then, each pixel is interpolated using the closest histograms.</p>
+
+<div class="highlight highlight-source-julia"><pre>hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">clahe</span>(img, nbins, xblocks <span class="pl-k">=</span> <span class="pl-c1">8</span>, yblocks <span class="pl-k">=</span> <span class="pl-c1">8</span>, clip <span class="pl-k">=</span> <span class="pl-c1">3</span>)</pre></div>
+
+<p>The <code>xblocks</code> and <code>yblocks</code> specify the number of blocks to divide the input image into in each direction. <code>nbins</code> specifies the granularity of histogram calculation of each local region. <code>clip</code> specifies the value at which the histogram is clipped. The excess in the histogram bins with value exceeding <code>clip</code> is redistributed among the other bins.</p>
+
 <h2>
 <a id="feature-extraction" class="anchor" href="#feature-extraction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feature Extraction</h2>
 
+<p>After working on exposure correction, I began with the other major chunk of my proposal which was ImageFeatures.jl. Edge and corner detection was already a part of Images.jl so I added some of my work in the same to Images.jl itself (this will be moved to ImageFeatures.jl before release). </p>
+
+<p>I started ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. </p>
+
+<div class="highlight highlight-source-julia"><pre>keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span>(img, params)</pre></div>
+
+<p>The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>censure_params &lt;: CENSURE</code></p>
+
+<div class="highlight highlight-source-julia"><pre>descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, params)
+descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, params)</pre></div>
+
+<p>Depending on the algorithm , the <code>create_descriptor</code> API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>brief_params &lt;: BRIEF</code></p>
+
 <h3>
 <a id="canny-edge-detection" class="anchor" href="#canny-edge-detection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Canny Edge Detection</h3>
+
+<p>The canny edge detector works by finding intensity gradients of an image and then double thresholding pixels as being part of weak or strong edges. Then the weak edges not connected to any strong edge are discarded and the result has the edges detected in the image.</p>
+
+<div class="highlight highlight-source-julia"><pre>canny_edges <span class="pl-k">=</span> <span class="pl-c1">canny</span>(img, sigma <span class="pl-k">=</span> <span class="pl-c1">1.4</span>, upperThreshold <span class="pl-k">=</span> <span class="pl-c1">0.80</span>, lowerThreshold <span class="pl-k">=</span> <span class="pl-c1">0.20</span>)</pre></div>
 
 <h3>
 <a id="corner-detection" class="anchor" href="#corner-detection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Corner Detection</h3>
@@ -161,8 +186,25 @@ hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>
 <h3>
 <a id="brisk-descriptors" class="anchor" href="#brisk-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BRISK Descriptors</h3>
 
+<p>The BRISK () descriptor has a predefined sampling pattern as compared to BRIEF or ORB. Pixels are sampled over concentric rings. </p>
+
+<p>The BRISK descriptor can be used by calling the BRISK constructor method to define the parameters and then using it with the <code>create_descriptor</code> API. </p>
+
+<div class="highlight highlight-source-julia"><pre>brisk_params <span class="pl-k">=</span> <span class="pl-c1">BRISK</span>(pattern_scale <span class="pl-k">=</span> <span class="pl-c1">1.0</span>)
+desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img_array, keypoints, brisk_params)</pre></div>
+
 <h3>
 <a id="freak-descriptors" class="anchor" href="#freak-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FREAK Descriptors</h3>
+
+<p>The FREAK (Fast REtinA Keypoint) descriptor, similar to BRISK as a predefined sampling pattern. It uses a retinal sampling grid with more density of points near the centre with the density decreasing exponentially with distance from the centre.</p>
+
+<p>The FREAK descriptor can be used by calling the FREAK constructor method to define the parameters and then using it with the <code>create_descriptor</code> API. Unlike BRISK, FREAK does not calculate the keypoints.</p>
+
+<div class="highlight highlight-source-julia"><pre>freak_params <span class="pl-k">=</span> <span class="pl-c1">FREAK</span>(pattern_scale <span class="pl-k">=</span> <span class="pl-c1">22.0</span>)
+desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img_array, keypoints, freak_params)</pre></div>
+
+<h2>
+<a id="imagedrawjl" class="anchor" href="#imagedrawjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageDraw.jl</h2>
 
 <h2>
 <a id="miscellaneous" class="anchor" href="#miscellaneous" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Miscellaneous</h2>
@@ -172,6 +214,13 @@ hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>
 
 <h3>
 <a id="colortypesjl" class="anchor" href="#colortypesjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ColorTypes.jl</h3>
+
+<h2>
+<a id="future-work" class="anchor" href="#future-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future Work</h2>
+
+<p>The BRISK and CENSURE PRs are yet to be merged. The BRISK PR is currently under review while the CENSURE one needs more tests before it can be merged. I hope to finish them before the GSoC period ends.</p>
+
+<p>I am also working on creating a set of tutorials on extracting features and using them to match images. The link to the tutorials can be found at the ImageFeatures.jl documentation <a href="http://juliaimages.github.io/ImageFeatures.jl/latest">website</a>.</p>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/mronian/gsoc-2016">Gsoc-2016</a> is maintained by <a href="https://github.com/mronian">mronian</a>.</span>
