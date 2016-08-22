@@ -31,6 +31,26 @@
 <p>I would like to thank my mentors <a href="https://github.com/timholy">Tim Holy</a> and <a href="https://github.com/SimonDanisch">Simon Danisch</a> for helping me out throughout the summer and guiding me towards achieving my goals. Their friendliness and approachability made the summer a enjoyable and fruitful experience.</p>
 
 <h2>
+<a id="before-the-coding-period" class="anchor" href="#before-the-coding-period" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Before the Coding Period</h2>
+
+<h3>
+<a id="testimagesjl" class="anchor" href="#testimagesjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TestImages.jl</h3>
+
+<p>In the initial phase of drafting my proposal, I had played around with Images.jl and TestImages.jl to understand the packages and try to make some initial contributions to the same. In the process, I felt that TestImages.jl needed a proper documentation along with a guide for contributing test images. Apart from the documentation, there was also a need to store the test images in a proper repository so that the links would not expire. Once my proposal was selected, I started working on this and with help from Tim Holy, I developed a new website for TestImages.jl along with an improved API to easily download images from the repository. The new API checks if the requested image is present in the online repository if it is not found locally and downloads it for the user.</p>
+
+<p>The documentation can be viewed <a href="https://timholy.github.io/TestImages.jl">here</a>.</p>
+
+<h3>
+<a id="histograms" class="anchor" href="#histograms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Histograms</h3>
+
+<p>To get familiar with open source and Images.jl, one of my first PRs was to add the histogram functionality. This was a very simple function which would calculate the histogram of an image i.e. the intensity distribution.</p>
+
+<div class="highlight highlight-source-julia"><pre>edges, count <span class="pl-k">=</span> <span class="pl-c1">imhist</span>(img, nbins)
+edges, count <span class="pl-k">=</span> <span class="pl-c1">imhist</span>(img, nbins, minval, maxval)</pre></div>
+
+<p>This generates a histogram for the image over <code>nbins</code> spread between <code>(minval, maxval]</code>. If <code>minval</code> and <code>maxval</code> are not given, then the minimum and maximum values present in the image are taken. <code>edges</code> specifies the range of the bins while <code>count</code> is a vector of the individual counts of the bins.</p>
+
+<h2>
 <a id="summary-of-contributions" class="anchor" href="#summary-of-contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Summary of Contributions</h2>
 
 <table>
@@ -76,29 +96,40 @@
 </table>
 
 <h2>
-<a id="before-the-coding-period" class="anchor" href="#before-the-coding-period" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Before the Coding Period</h2>
-
-<h3>
-<a id="testimagesjl" class="anchor" href="#testimagesjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TestImages.jl</h3>
-
-<p>In the initial phase of drafting my proposal, I had played around with Images.jl and TestImages.jl to understand the packages and try to make some initial contributions to the same. In the process, I felt that TestImages.jl needed a proper documentation along with a guide for contributing test images. Apart from the documentation, there was also a need to store the test images in a proper repository so that the links would not expire. Once my proposal was selected, I started working on this and with help from Tim Holy, I developed a new website for TestImages.jl along with an improved API to easily download images from the repository.</p>
-
-<p>The documentation can be viewed <a href="https://timholy.github.io/TestImages.jl">here</a>.</p>
-
-<h3>
-<a id="histograms" class="anchor" href="#histograms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Histograms</h3>
-
-<h2>
 <a id="exposure-correction" class="anchor" href="#exposure-correction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exposure Correction</h2>
+
+<p>The first part of my proposal was to add exposure correction functionality to Images.jl. This was a bit challenging considering the various type of Images and ColorTypes in julia and my goal was to provide a common API which would handle all types of Images using julia's method dispatch. I am happy to say that we were able to do this to a considerable extent and all the functions are easy to use and intuitive, offering a lot of options at the same time.</p>
 
 <h3>
 <a id="histogram-equalisation" class="anchor" href="#histogram-equalisation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Histogram Equalisation</h3>
 
+<p>My first contribution during the coding period was the histogram equalisation functionality. This took up quite a bit of time as I worked on optimising the performance and got to learn about the inner workings of Arrays (Images are derived from Arrays!) in julia and how to write efficient functions for operating on them.  I was also introduced to <code>@code_warntype</code> and how to julia infers the type of variables in the code and how to best exploit this to increase performance. Tim Holy was really helpful and patient (Thanks Tim!) throughout the initial phase with a lot of code reviews and advice which really helped me later on.</p>
+
+<div class="highlight highlight-source-julia"><pre>hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>(img, nbins)
+hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>(img, nbins, minval, maxval)</pre></div>
+
+<p>This returns a histogram equalised image with a granularity of approximately <code>nbins</code> number of bins. If <code>minval</code> and <code>maxval</code> are specified then intensities are equalized to the range <code>(minval, maxval)</code>. The default values are <code>0</code> and <code>1</code>.</p>
+
 <h3>
 <a id="histogram-matching" class="anchor" href="#histogram-matching" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Histogram Matching</h3>
 
+<p>Histogram matching is another way of achieving exposure correction by trying to modify the histogram of the image to match that of a predefined image with the desired histogram.</p>
+
+<div class="highlight highlight-source-julia"><pre>hist_matched_img <span class="pl-k">=</span> <span class="pl-c1">histmatch</span>(img, oimg, nbins)</pre></div>
+
+<p>This returns a grayscale histogram matched image with a granularity of <code>nbins</code> number of bins. <code>img</code> is the image to be matched and <code>oimg</code> is the image having the desired histogram to be matched to.</p>
+
 <h3>
 <a id="gamma-correction" class="anchor" href="#gamma-correction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gamma Correction</h3>
+
+<p>Gamma correction is a method of enhancing or reducing the intensity levels in an image by using a power function.</p>
+
+<div class="highlight highlight-source-julia"><pre>gamma_corrected_img <span class="pl-k">=</span> <span class="pl-c1">adjust_gamma</span>(img, gamma)</pre></div>
+
+<p>The <code>adjust_gamma</code> function can handle a variety of input types. The returned image depends on the input type. If the input is an <code>Image</code> then the resulting image is of the same type and has the same properties.</p>
+
+<h3>
+<a id="contrast-limited-adaptive-histogram-equalisation" class="anchor" href="#contrast-limited-adaptive-histogram-equalisation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contrast Limited Adaptive Histogram Equalisation</h3>
 
 <h2>
 <a id="feature-extraction" class="anchor" href="#feature-extraction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Feature Extraction</h2>
