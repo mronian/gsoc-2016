@@ -8,16 +8,6 @@ As we reach the final week of GSoC, it feels great to have managed to achieve mo
 
 I would like to thank my mentors [Tim Holy](https://github.com/timholy) and [Simon Danisch](https://github.com/SimonDanisch) for helping me out throughout the summer and guiding me towards achieving my goals. Their friendliness and approachability made the summer a enjoyable and fruitful experience.
 
-## Summary of Contributions
-| Package | Merged Commits | Pull Requests (Open and Merged) |
-|---------|----------------|---------------------------------|
-| [Images.jl](https://github.com/timholy/Images.jl) | [Link](https://github.com/timholy/Images.jl/commits/master?author=mronian) | [Link](https://github.com/timholy/Images.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
-| [ImageFeatures.jl](https://github.com/JuliaImages/ImageFeatures.jl) | [Link](https://github.com/JuliaImages/ImageFeatures.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaImages/ImageFeatures.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
-| [ImageDraw.jl](https://github.com/JuliaImages/ImageDraw.jl) | [Link](https://github.com/JuliaImages/ImageDraw.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaImages/ImageDraw.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
-| [TestImages.jl](https://github.com/timholy/TestImages.jl) | [Link](https://github.com/timholy/TestImages.jl/commits/master?author=mronian) | [Link](https://github.com/timholy/TestImages.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
-| [ColorVectorSpace.jl](https://github.com/JuliaGraphics/ColorVectorSpace.jl) | [Link](https://github.com/JuliaGraphics/ColorVectorSpace.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaGraphics/ColorVectorSpace.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
-| [ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl) | [Link](https://github.com/JuliaGraphics/ColorTypes.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaGraphics/ColorTypes.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
-
 ## Before the Coding Period
 ### TestImages.jl
 
@@ -35,11 +25,52 @@ edges, count = imhist(img, nbins, minval, maxval)
 ```
 This generates a histogram for the image over `nbins` spread between `(minval, maxval]`. If `minval` and `maxval` are not given, then the minimum and maximum values present in the image are taken. `edges` specifies the range of the bins while `count` is a vector of the individual counts of the bins.
 
+## Summary of Contributions
+| Package | Merged Commits | Pull Requests (Open and Merged) |
+|---------|----------------|---------------------------------|
+| [Images.jl](https://github.com/timholy/Images.jl) | [Link](https://github.com/timholy/Images.jl/commits/master?author=mronian) | [Link](https://github.com/timholy/Images.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
+| [ImageFeatures.jl](https://github.com/JuliaImages/ImageFeatures.jl) | [Link](https://github.com/JuliaImages/ImageFeatures.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaImages/ImageFeatures.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
+| [ImageDraw.jl](https://github.com/JuliaImages/ImageDraw.jl) | [Link](https://github.com/JuliaImages/ImageDraw.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaImages/ImageDraw.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
+| [TestImages.jl](https://github.com/timholy/TestImages.jl) | [Link](https://github.com/timholy/TestImages.jl/commits/master?author=mronian) | [Link](https://github.com/timholy/TestImages.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
+| [ColorVectorSpace.jl](https://github.com/JuliaGraphics/ColorVectorSpace.jl) | [Link](https://github.com/JuliaGraphics/ColorVectorSpace.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaGraphics/ColorVectorSpace.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
+| [ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl) | [Link](https://github.com/JuliaGraphics/ColorTypes.jl/commits/master?author=mronian) | [Link](https://github.com/JuliaGraphics/ColorTypes.jl/pulls?utf8=%E2%9C%93&q=is%3Apr%20author%3Amronian%20)
+
 ## Exposure Correction
 
+The first part of my proposal was to add exposure correction functionality to Images.jl. This was a bit challenging considering the various type of Images and ColorTypes in julia and my goal was to provide a common API which would handle all types of Images using julia's method dispatch. I am happy to say that we were able to do this to a considerable extent and all the functions are easy to use and intuitive, offering a lot of options at the same time.
+
 ### Histogram Equalisation
+
+My first contribution during the coding period was the histogram equalisation functionality. This took up quite a bit of time as I worked on optimising the performance and got to learn about the inner workings of Arrays (Images are derived from Arrays!) in julia and how to write efficient functions for operating on them.  I was also introduced to `@code_warntype` and how to julia infers the type of variables in the code and how to best exploit this to increase performance. Tim Holy was really helpful and patient (Thanks Tim!) throughout the initial phase with a lot of code reviews and advice which really helped me later on.
+
+```julia
+hist_equalised_img = histeq(img, nbins)
+hist_equalised_img = histeq(img, nbins, minval, maxval)
+```
+
+This returns a histogram equalised image with a granularity of approximately `nbins` number of bins. If `minval` and `maxval` are specified then intensities are equalized to the range `(minval, maxval)`. The default values are `0` and `1`.
+
 ### Histogram Matching
+
+Histogram matching is another way of achieving exposure correction by trying to modify the histogram of the image to match that of a predefined image with the desired histogram.
+
+```julia
+hist_matched_img = histmatch(img, oimg, nbins)
+```
+
+This returns a grayscale histogram matched image with a granularity of `nbins` number of bins. `img` is the image to be matched and `oimg` is the image having the desired histogram to be matched to.
+
 ### Gamma Correction
+
+Gamma correction is a method of enhancing or reducing the intensity levels in an image by using a power function.
+
+```julia
+gamma_corrected_img = adjust_gamma(img, gamma)
+```
+
+The `adjust_gamma` function can handle a variety of input types. The returned image depends on the input type. If the input is an `Image` then the resulting image is of the same type and has the same properties.
+
+### Contrast Limited Adaptive Histogram Equalisation
 
 ## Feature Extraction
 ### Canny Edge Detection
