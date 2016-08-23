@@ -170,6 +170,10 @@ hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>
 
 <div class="highlight highlight-source-julia"><pre>canny_edges <span class="pl-k">=</span> <span class="pl-c1">canny</span>(img, sigma <span class="pl-k">=</span> <span class="pl-c1">1.4</span>, upperThreshold <span class="pl-k">=</span> <span class="pl-c1">0.80</span>, lowerThreshold <span class="pl-k">=</span> <span class="pl-c1">0.20</span>)</pre></div>
 
+<p>Results of using the Canny edge detector on an image.</p>
+
+<p><img src="https://github.com/mronian/gsoc-2016/blob/master/canny_example.jpg?raw=true" alt=""></p>
+
 <h3>
 <a id="corner-detection" class="anchor" href="#corner-detection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Corner Detection</h3>
 
@@ -189,6 +193,10 @@ corners <span class="pl-k">=</span> <span class="pl-c1">imcorner</span>(img, thr
 <p>FAST corners may be detected by using the <code>fastcorners</code> API.</p>
 
 <div class="highlight highlight-source-julia"><pre>corners <span class="pl-k">=</span> <span class="pl-c1">fastcorners</span>(img, n, threshold)</pre></div>
+
+<p>Results of using the FAST Corner detector on an image.</p>
+
+<p><img src="https://github.com/mronian/gsoc-2016/blob/master/fast_example.jpg?raw=true" alt=""></p>
 
 <h3>
 <a id="imagefeaturesjl" class="anchor" href="#imagefeaturesjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageFeatures.jl</h3>
@@ -287,6 +295,10 @@ descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create
 <div class="highlight highlight-source-julia"><pre>brief_params <span class="pl-k">=</span> <span class="pl-c1">BRIEF</span>([size], [window], [sigma], [sampling_type], [seed])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, brief_params)</pre></div>
 
+<p>Results of using the BRIEF descriptor on a translated image.</p>
+
+<p><img src="http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/brief_example.jpg" alt=""></p>
+
 <h3>
 <a id="orb-keypoints-and-descriptors" class="anchor" href="#orb-keypoints-and-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ORB Keypoints and Descriptors</h3>
 
@@ -296,6 +308,10 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 
 <div class="highlight highlight-source-julia"><pre>orb_params <span class="pl-k">=</span> <span class="pl-c1">ORB</span>([num_keypoints], [n_fast], [threshold], [harris_factor], [downsample], [levels], [sigma])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, orb_params)</pre></div>
+
+<p>Results of using the ORB descriptor on a translated and rotated image.</p>
+
+<p><img src="http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/orb_example.jpg" alt=""></p>
 
 <h3>
 <a id="censure-keypoints" class="anchor" href="#censure-keypoints" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CENSURE Keypoints</h3>
@@ -317,6 +333,10 @@ keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span
 <div class="highlight highlight-source-julia"><pre>brisk_params <span class="pl-k">=</span> <span class="pl-c1">BRISK</span>([pattern_scale])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, brisk_params)</pre></div>
 
+<p>Results of using the BRISK descriptor on a translated and rotated image.</p>
+
+<p><img src="http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/brisk_example.jpg" alt=""></p>
+
 <h3>
 <a id="freak-descriptors" class="anchor" href="#freak-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FREAK Descriptors</h3>
 
@@ -326,6 +346,10 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 
 <div class="highlight highlight-source-julia"><pre>freak_params <span class="pl-k">=</span> <span class="pl-c1">FREAK</span>([pattern_scale])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, freak_params)</pre></div>
+
+<p>Results of using the FREAK descriptor on a translated and rotated image.</p>
+
+<p><img src="http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/freak_example.jpg" alt=""></p>
 
 <h2>
 <a id="imagedrawjl" class="anchor" href="#imagedrawjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageDraw.jl</h2>
