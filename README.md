@@ -4,7 +4,7 @@
 
 My [proposal](https://docs.google.com/document/d/1XD_fpT6YpyK6Iv2Rues2RlU-15l4aBbUZTSz1V216pw/edit?usp=sharing) for this summer was to work on [ImageFeatures.jl](https://github.com/JuliaImages/ImageFeatures.jl), a new Julia package for Feature Extraction and Descriptors in Images. Alongside this, I planned to add Exposure Correction functionality to [Images.jl](https://github.com/timholy/Images.jl), an existing package for Image Processing in Julia.
 
-As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer abd be able to work with amazing people in the [JuliaImages](https://github.com/JuliaImages) organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.
+As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer and gotten the chance to work with amazing people in the [JuliaImages](https://github.com/JuliaImages) organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.
 
 I would like to thank my mentors [Tim Holy](https://github.com/timholy) and [Simon Danisch](https://github.com/SimonDanisch) for helping me out throughout the summer and guiding me towards achieving my goals. Their friendliness and approachability made the summer a enjoyable and fruitful experience.
 
@@ -96,15 +96,93 @@ canny_edges = canny(img, sigma = 1.4, upperThreshold = 0.80, lowerThreshold = 0.
 
 ### Corner Detection
 
+I worked on the `imcorner` API to overhaul the existing corner detection functions and added additional functionality with 
+`kitchen_rosenfeld` corners and FAST corners (discussed below). 
 
+```julia
+corners = imcorner(img; [method])
+corners = imcorner(img, threshold, percentile; [method])
+```
+
+The `method` argument takes in the name of the algorithm to be used to detect corners, namely `harris`, `shi_tomasi` and `kitchen_rosenfeld`.
 
 ### FAST Corners
 
 FAST (Features from Accelerated Segment Test) corners, an efficient and very popular corner detection algorithm works by finding a contiguous set of pixels brighter or darker than the candidate pixel. Depending on the number of contiguous pixels found, the candidate is marked as a potential corner. 
 
-### ImageFeatures.jl Framework
+FAST corners may be detected by using the `fastcorners` API.
 
-I started work on ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. 
+```julia
+corners = fastcorners(img, n, threshold)
+```
+
+### ImageFeatures.jl
+
+I started work on ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). 
+
+### Gray Level Co Occurence Matrices
+
+Gray Level Co-occurrence Matrix (GLCM) is used for texture analysis. We consider two pixels at a time, called the reference and the neighbour pixel. We define a particular spatial relationship between the reference and neighbour pixel before calculating the GLCM.
+
+The GLCM is calculated by calling one of `glcm`, `glcm_symmetric` or `glcm_norm` functions depending on the desired GLCM type. 
+
+```julia
+glcm = glcm(img, distance, angle, mat_size)
+```
+
+If multiple GLCMs need to be calculated, the same function may be used by passing a vector in the arguments. The `distance` and `angle` arguments take in both `Int` and `Vector{Int}` values.
+
+Multiple properties of the obtained GLCM can be calculated by using the `glcm_prof` function which calculates the property of the entire matrix or in windows if given the window dimensions.
+
+```julia
+prop = glcm_prop(glcm, property)
+prop = glcm_prop(glcm, height, width, property)
+```
+
+Various properties can be calculated like `mean`, `variance`, `correlation`, `contrast`, `IDM` (Inverse Difference Moment), `ASM` (Angular Second Moment), `entropy`, `max_prob` (Max Probability), `energy` and `dissimilarity`.
+
+### Local Binary Patterns
+
+Local Binary Pattern (LBP) is a very efficient texture operator which labels the pixels of an image by thresholding the neighborhood of each pixel and considers the result as a binary number. The feature vector can now then be processed using some machine-learning algorithm to classify images. Such classifiers are often used for face recognition or texture analysis.
+
+We have multiple type of LBP algorithms in ImageFeatures.jl :
+
+The first three methods can be used with both circular offsets (circle around the pixel) or the 8x8 neighbourhood.
+
+The first two methods, `lbp` and `modified_lbp` may be called with one of three `lbp_original`, `lbp_uniform` and `lbp_rotation_invariant` as the `method` argument which specifies the method used to create the bit pattern.
+
+- `lbp` is the original algorithm defined in the `94 paper.
+- `modified_lbp` is a version of LBP which compares the intensity of each pixel with the average intensity in the window.
+- `direction_coded_lbp` is a version of LBP where the intensity differences along the four directions (N-S, NW-SE, NE-SW, E-W) are coded along with the variation in differences along the directions in 8 bits.
+- `multi_block_lbp` is a version of LBP used for window matching as an alternative to Haar like features. The image is divided into blocks and the average intensity of each block is considered with the center block to obtain the LBP.
+
+```julia
+lbp_image = lbp(img)
+lbp_image = lbp(img, 10, 2) # With circular offsets
+lbp_image = lbp(img_gray, lbp_uniform)
+lbp_image = lbp(img_gray, lbp_rotation_invariant)
+
+
+lbp_image = modified_lbp(img_gray)
+lbp_image = modified_lbp(img_gray, points, radius)
+
+lbp_image = direction_coded_lbp(img)
+lbp_image = direction_coded_lbp(img, points, radius)
+
+pattern = multi_block_lbp(img, top_left_y, top_left_x, height_block, width_block)
+```
+
+We can also create the descriptor from a histogram of LBPs over the image by calling `create_descriptor`.
+
+```julia
+desc = create_descriptor(img, yblocks, xblocks, [lbp_type])
+```
+
+The `lbp_type` argument takes in one of the functions defined above, while the `yblocks` and `xblocks` arguments specify the size of the grid to create in the image.
+
+### Framework
+
+Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. 
 
 The `Feature` and `Keypoint` types are the fundamental types in ImageFeatures.jl. `Feature` stores the `keypoint` and its `orientation` and `scale`. A vector of the `Feature` type is denoted by the `Features` type and similary a vector of `Keypoint` type is denoted by the `Keypoints` type. We provide multiple methods for easily transitioning between the two types. 
 
@@ -120,7 +198,6 @@ keypoints = extract_features(img, params)
 
 The `params` argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. `censure_params <: CENSURE`
 
-
 ```julia
 descriptor, ret_keypoints = create_descriptor(img, params)
 descriptor, ret_keypoints = create_descriptor(img, keypoints, params)
@@ -128,25 +205,48 @@ descriptor, ret_keypoints = create_descriptor(img, keypoints, params)
 
 Depending on the algorithm , the `create_descriptor` API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The `params` argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. `brief_params <: BRIEF`
 
+A brief discussion on the various algorithms is given below. For more details on each of the algorithms, please visit the [documentation](http://juliaimages.github.io/ImageFeatures.jl/latest/) for ImageFeatures.jl.
+
 ### BRIEF Descriptors
 
-### Gray Level Co Occurence Matrices
+BRIEF (Binary Robust Independent Elementary Features) is an efficient feature point descriptor. It is highly discriminative even when using relatively few bits and is computed using simple intensity difference tests. BRIEF does not have a predefined sampling pattern and the pairs are chosen randomly.
 
-### Local Binary Patterns
+```julia
+brief_params = BRIEF(size = 256, window = 10, seed = 123)
+desc, ret_keypoints = create_descriptor(img, keypoints, brief_params)
+```
 
 ### ORB Keypoints and Descriptors
 
+ORB (Oriented Fast and Rotated Brief) descriptor is similar to BRIEF but has an orientation detection mechanism. Apart from creating a descriptor, it also extracts keypoints over a gaussian pyramid using the FAST corners algorithm.
+
+It can be used by calling the ORB constructor method. 
+
+```julia
+orb_params = ORB(num_keypoints = 1000)
+desc, ret_keypoints = create_descriptor(img, orb_params)
+```
+
 ### CENSURE Keypoints
+
+*Note : This PR is still open. The function needs more tests before it can be merged.*
+
+CENSURE (CENter SURround Extremas) keypoints are calculated using extremas at all scales and locations unlike SIFT or SURF which take extremas at each octave. To approximate the Laplacian operator, a bi-level (1 or -1) centre surround filter is used. Increasing size of the filter in each octave gives the result of the operator at different scales. Points of maxima and minima across the octaves are extracted as keypoints.
+
+```julia
+censure_params = CENSURE()
+keypoints = extract_features(img, censure_params)
+```
 
 ### BRISK Descriptors
 
-The BRISK () descriptor has a predefined sampling pattern as compared to BRIEF or ORB. Pixels are sampled over concentric rings. 
+The BRISK (Binary Robust Invariant Scalable Keypoints) descriptor has a predefined sampling pattern as compared to BRIEF or ORB. Pixels are sampled over concentric rings. 
 
 The BRISK descriptor can be used by calling the BRISK constructor method to define the parameters and then using it with the `create_descriptor` API. 
 
 ```julia
 brisk_params = BRISK(pattern_scale = 1.0)
-desc, ret_keypoints = create_descriptor(img_array, keypoints, brisk_params)
+desc, ret_keypoints = create_descriptor(img, keypoints, brisk_params)
 ```
 
 ### FREAK Descriptors
@@ -157,15 +257,51 @@ The FREAK descriptor can be used by calling the FREAK constructor method to defi
 
 ```julia
 freak_params = FREAK(pattern_scale = 22.0)
-desc, ret_keypoints = create_descriptor(img_array, keypoints, freak_params)
+desc, ret_keypoints = create_descriptor(img, keypoints, freak_params)
 ```
 
 ## ImageDraw.jl
 
+To help me understand how the feature detection algorithms were working, I needed a drawing library for Images in julia. Since it was already on the roadmap for JuliaImages, I developed proper APIs and created a new package, [ImageDraw.jl](https://github.com/JuliaImages/ImageDraw.jl). 
+
+### Lines
+
+The `line` and `line!` functions draw a line on the input image given the points p1, p2 as CartesianIndex{2} with the given `color`. Lines are drawn using the `bresenham` method by default. If anti-aliasing is required, the `xiaolin_wu` can be used. 
+
+```julia
+img_with_line = line(img, p1, p2, color, method)
+img_with_line = line(img, y0, x0, y1, x1, color, method)
+```
+
+To draw a line on the input image itself, use the line! function.
+
+```julia
+line!(img, p1, p2, color, method)
+```
+
+### Circles and Ellipses
+
+The `ellipse` and `ellipse!` (similar use as `line!`) draw an ellipse on the input image given the `center` as a `CartesianIndex{2}` or as coordinates `(y, x)` using the specified `color`. If `color` is not specified, `one(eltype(img))` is used.
+
+```julia
+img_with_ellipse = ellipse(img, center, radiusy, radiusx)
+img_with_ellipse = ellipse(img, center, color, radiusy, radiusx)
+img_with_ellipse = ellipse(img, y, x, radiusy, radiusx)
+img_with_ellipse = ellipse(img, y, x, color, radiusy, radiusx)
+```
+
+Similarly the `circle` and its counterpart `circle!` functions may be used to draw circles.
+
+```julia
+img_with_circle = circle(img, center, radiusy, radiusx)
+img_with_circle = circle(img, center, color, radiusy, radiusx)
+img_with_circle = circle(img, y, x, radiusy, radiusx)
+img_with_circle = circle(img, y, x, color, radiusy, radiusx)
+```
+
 ## Miscellaneous
 
-### ColorVectorSpace.jl
-### ColorTypes.jl
+Apart from the work discussed above, I also made minor contributions to two related packages, [ColorVectorSpace.jl](https://github.com/JuliaGraphics/ColorVectorSpace.jl) and [ColorTypes.jl](https://github.com/JuliaGraphics/ColorTypes.jl)
 
 ## Future Work
 
