@@ -94,6 +94,10 @@ The canny edge detector works by finding intensity gradients of an image and the
 canny_edges = canny(img, sigma = 1.4, upperThreshold = 0.80, lowerThreshold = 0.20)
 ```
 
+Results of using the Canny edge detector on an image.
+
+![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/canny_example.jpg)
+
 ### Corner Detection
 
 I worked on the `imcorner` API to overhaul the existing corner detection functions and added additional functionality with 
@@ -115,6 +119,10 @@ FAST corners may be detected by using the `fastcorners` API.
 ```julia
 corners = fastcorners(img, n, threshold)
 ```
+
+Results of using the FAST Corner detector on an image.
+
+![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/fast_example.jpg)
 
 ### ImageFeatures.jl
 
@@ -216,6 +224,10 @@ brief_params = BRIEF([size], [window], [sigma], [sampling_type], [seed])
 desc, ret_keypoints = create_descriptor(img, keypoints, brief_params)
 ```
 
+Results of using the BRIEF descriptor on a translated image.
+
+![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/brief_example.jpg)
+
 ### ORB Keypoints and Descriptors
 
 ORB (Oriented Fast and Rotated Brief) descriptor is similar to BRIEF but has an orientation detection mechanism. Apart from creating a descriptor, it also extracts keypoints over a gaussian pyramid using the FAST corners algorithm.
@@ -226,6 +238,10 @@ It can be used by calling the ORB constructor method.
 orb_params = ORB([num_keypoints], [n_fast], [threshold], [harris_factor], [downsample], [levels], [sigma])
 desc, ret_keypoints = create_descriptor(img, orb_params)
 ```
+
+Results of using the ORB descriptor on a translated and rotated image.
+
+![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/orb_example.jpg)
 
 ### CENSURE Keypoints
 
@@ -249,6 +265,10 @@ brisk_params = BRISK([pattern_scale])
 desc, ret_keypoints = create_descriptor(img, keypoints, brisk_params)
 ```
 
+Results of using the BRISK descriptor on a translated and rotated image.
+
+![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/brisk_example.jpg)
+
 ### FREAK Descriptors
 
 The FREAK (Fast REtinA Keypoint) descriptor, similar to BRISK as a predefined sampling pattern. It uses a retinal sampling grid with more density of points near the centre with the density decreasing exponentially with distance from the centre.
@@ -259,6 +279,10 @@ The FREAK descriptor can be used by calling the FREAK constructor method to defi
 freak_params = FREAK([pattern_scale])
 desc, ret_keypoints = create_descriptor(img, keypoints, freak_params)
 ```
+
+Results of using the FREAK descriptor on a translated and rotated image.
+
+![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/freak_example.jpg)
 
 ## ImageDraw.jl
 
