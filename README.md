@@ -205,14 +205,14 @@ descriptor, ret_keypoints = create_descriptor(img, keypoints, params)
 
 Depending on the algorithm , the `create_descriptor` API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The `params` argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. `brief_params <: BRIEF`
 
-A brief discussion on the various algorithms is given below. For more details on each of the algorithms, please visit the [documentation](http://juliaimages.github.io/ImageFeatures.jl/latest/) for ImageFeatures.jl.
+A brief discussion on the various algorithms is given below. For more details on each of the algorithms and the parameters of the constructor methods, please visit the [documentation](http://juliaimages.github.io/ImageFeatures.jl/latest/) for ImageFeatures.jl.
 
 ### BRIEF Descriptors
 
 BRIEF (Binary Robust Independent Elementary Features) is an efficient feature point descriptor. It is highly discriminative even when using relatively few bits and is computed using simple intensity difference tests. BRIEF does not have a predefined sampling pattern and the pairs are chosen randomly.
 
 ```julia
-brief_params = BRIEF(size = 256, window = 10, seed = 123)
+brief_params = BRIEF([size], [window], [sigma], [sampling_type], [seed])
 desc, ret_keypoints = create_descriptor(img, keypoints, brief_params)
 ```
 
@@ -223,7 +223,7 @@ ORB (Oriented Fast and Rotated Brief) descriptor is similar to BRIEF but has an 
 It can be used by calling the ORB constructor method. 
 
 ```julia
-orb_params = ORB(num_keypoints = 1000)
+orb_params = ORB([num_keypoints], [n_fast], [threshold], [harris_factor], [downsample], [levels], [sigma])
 desc, ret_keypoints = create_descriptor(img, orb_params)
 ```
 
@@ -234,7 +234,7 @@ desc, ret_keypoints = create_descriptor(img, orb_params)
 CENSURE (CENter SURround Extremas) keypoints are calculated using extremas at all scales and locations unlike SIFT or SURF which take extremas at each octave. To approximate the Laplacian operator, a bi-level (1 or -1) centre surround filter is used. Increasing size of the filter in each octave gives the result of the operator at different scales. Points of maxima and minima across the octaves are extracted as keypoints.
 
 ```julia
-censure_params = CENSURE()
+censure_params = CENSURE([smallest], [largest], [filter], [response_threshold], [line_threshold])
 keypoints = extract_features(img, censure_params)
 ```
 
@@ -245,7 +245,7 @@ The BRISK (Binary Robust Invariant Scalable Keypoints) descriptor has a predefin
 The BRISK descriptor can be used by calling the BRISK constructor method to define the parameters and then using it with the `create_descriptor` API. 
 
 ```julia
-brisk_params = BRISK(pattern_scale = 1.0)
+brisk_params = BRISK([pattern_scale])
 desc, ret_keypoints = create_descriptor(img, keypoints, brisk_params)
 ```
 
@@ -256,7 +256,7 @@ The FREAK (Fast REtinA Keypoint) descriptor, similar to BRISK as a predefined sa
 The FREAK descriptor can be used by calling the FREAK constructor method to define the parameters and then using it with the `create_descriptor` API. Unlike BRISK, FREAK does not calculate the keypoints.
 
 ```julia
-freak_params = FREAK(pattern_scale = 22.0)
+freak_params = FREAK([pattern_scale])
 desc, ret_keypoints = create_descriptor(img, keypoints, freak_params)
 ```
 
