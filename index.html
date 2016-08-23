@@ -277,14 +277,14 @@ descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create
 
 <p>Depending on the algorithm , the <code>create_descriptor</code> API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>brief_params &lt;: BRIEF</code></p>
 
-<p>A brief discussion on the various algorithms is given below. For more details on each of the algorithms, please visit the <a href="http://juliaimages.github.io/ImageFeatures.jl/latest/">documentation</a> for ImageFeatures.jl.</p>
+<p>A brief discussion on the various algorithms is given below. For more details on each of the algorithms and the parameters of the constructor methods, please visit the <a href="http://juliaimages.github.io/ImageFeatures.jl/latest/">documentation</a> for ImageFeatures.jl.</p>
 
 <h3>
 <a id="brief-descriptors" class="anchor" href="#brief-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BRIEF Descriptors</h3>
 
 <p>BRIEF (Binary Robust Independent Elementary Features) is an efficient feature point descriptor. It is highly discriminative even when using relatively few bits and is computed using simple intensity difference tests. BRIEF does not have a predefined sampling pattern and the pairs are chosen randomly.</p>
 
-<div class="highlight highlight-source-julia"><pre>brief_params <span class="pl-k">=</span> <span class="pl-c1">BRIEF</span>(size <span class="pl-k">=</span> <span class="pl-c1">256</span>, window <span class="pl-k">=</span> <span class="pl-c1">10</span>, seed <span class="pl-k">=</span> <span class="pl-c1">123</span>)
+<div class="highlight highlight-source-julia"><pre>brief_params <span class="pl-k">=</span> <span class="pl-c1">BRIEF</span>([size], [window], [sigma], [sampling_type], [seed])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, brief_params)</pre></div>
 
 <h3>
@@ -294,7 +294,7 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 
 <p>It can be used by calling the ORB constructor method. </p>
 
-<div class="highlight highlight-source-julia"><pre>orb_params <span class="pl-k">=</span> <span class="pl-c1">ORB</span>(num_keypoints <span class="pl-k">=</span> <span class="pl-c1">1000</span>)
+<div class="highlight highlight-source-julia"><pre>orb_params <span class="pl-k">=</span> <span class="pl-c1">ORB</span>([num_keypoints], [n_fast], [threshold], [harris_factor], [downsample], [levels], [sigma])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, orb_params)</pre></div>
 
 <h3>
@@ -304,7 +304,7 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 
 <p>CENSURE (CENter SURround Extremas) keypoints are calculated using extremas at all scales and locations unlike SIFT or SURF which take extremas at each octave. To approximate the Laplacian operator, a bi-level (1 or -1) centre surround filter is used. Increasing size of the filter in each octave gives the result of the operator at different scales. Points of maxima and minima across the octaves are extracted as keypoints.</p>
 
-<div class="highlight highlight-source-julia"><pre>censure_params <span class="pl-k">=</span> <span class="pl-c1">CENSURE</span>()
+<div class="highlight highlight-source-julia"><pre>censure_params <span class="pl-k">=</span> <span class="pl-c1">CENSURE</span>([smallest], [largest], [filter], [response_threshold], [line_threshold])
 keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span>(img, censure_params)</pre></div>
 
 <h3>
@@ -314,7 +314,7 @@ keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span
 
 <p>The BRISK descriptor can be used by calling the BRISK constructor method to define the parameters and then using it with the <code>create_descriptor</code> API. </p>
 
-<div class="highlight highlight-source-julia"><pre>brisk_params <span class="pl-k">=</span> <span class="pl-c1">BRISK</span>(pattern_scale <span class="pl-k">=</span> <span class="pl-c1">1.0</span>)
+<div class="highlight highlight-source-julia"><pre>brisk_params <span class="pl-k">=</span> <span class="pl-c1">BRISK</span>([pattern_scale])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, brisk_params)</pre></div>
 
 <h3>
@@ -324,7 +324,7 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 
 <p>The FREAK descriptor can be used by calling the FREAK constructor method to define the parameters and then using it with the <code>create_descriptor</code> API. Unlike BRISK, FREAK does not calculate the keypoints.</p>
 
-<div class="highlight highlight-source-julia"><pre>freak_params <span class="pl-k">=</span> <span class="pl-c1">FREAK</span>(pattern_scale <span class="pl-k">=</span> <span class="pl-c1">22.0</span>)
+<div class="highlight highlight-source-julia"><pre>freak_params <span class="pl-k">=</span> <span class="pl-c1">FREAK</span>([pattern_scale])
 desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, freak_params)</pre></div>
 
 <h2>
