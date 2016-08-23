@@ -1,32 +1,51 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Gsoc-2016 by mronian</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Gsoc-2016</h1>
-      <h2 class="project-tagline">Work done in Google Summer of Code 2016 with The Julia Language</h2>
-      <a href="https://github.com/mronian/gsoc-2016" class="btn">View on GitHub</a>
-      <a href="https://github.com/mronian/gsoc-2016/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/mronian/gsoc-2016/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/mronian/gsoc-2016">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/mronian/gsoc-2016/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/mronian/gsoc-2016/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <section class="main-content">
-      <h1>
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Gsoc-2016</h1>
+          <p>Work done in Google Summer of Code 2016 with The Julia Language</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/mronian">mronian</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
 <a id="google-summer-of-code-2016" class="anchor" href="#google-summer-of-code-2016" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Google Summer of Code 2016</h1>
 
 <p><sub><a href="#before-the-coding-period">Before the Coding Period</a> | <a href="#summary-of-contributions">Summary of Contributions</a> | <a href="#exposure-correction">Exposure Correction</a> | <a href="#feature-extraction">Feature Extraction</a> | <a href="#miscellaneous">Miscelleanous</a> | <a href="#future-work">Future Work</a></sub></p>
 
 <p>My <a href="https://docs.google.com/document/d/1XD_fpT6YpyK6Iv2Rues2RlU-15l4aBbUZTSz1V216pw/edit?usp=sharing">proposal</a> for this summer was to work on <a href="https://github.com/JuliaImages/ImageFeatures.jl">ImageFeatures.jl</a>, a new Julia package for Feature Extraction and Descriptors in Images. Alongside this, I planned to add Exposure Correction functionality to <a href="https://github.com/timholy/Images.jl">Images.jl</a>, an existing package for Image Processing in Julia.</p>
 
-<p>As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer abd be able to work with amazing people in the <a href="https://github.com/JuliaImages">JuliaImages</a> organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.</p>
+<p>As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer and gotten the chance to work with amazing people in the <a href="https://github.com/JuliaImages">JuliaImages</a> organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.</p>
 
 <p>I would like to thank my mentors <a href="https://github.com/timholy">Tim Holy</a> and <a href="https://github.com/SimonDanisch">Simon Danisch</a> for helping me out throughout the summer and guiding me towards achieving my goals. Their friendliness and approachability made the summer a enjoyable and fruitful experience.</p>
 
@@ -154,15 +173,92 @@ hist_equalised_img <span class="pl-k">=</span> <span class="pl-c1">histeq</span>
 <h3>
 <a id="corner-detection" class="anchor" href="#corner-detection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Corner Detection</h3>
 
+<p>I worked on the <code>imcorner</code> API to overhaul the existing corner detection functions and added additional functionality with 
+<code>kitchen_rosenfeld</code> corners and FAST corners (discussed below). </p>
+
+<div class="highlight highlight-source-julia"><pre>corners <span class="pl-k">=</span> <span class="pl-c1">imcorner</span>(img; [method])
+corners <span class="pl-k">=</span> <span class="pl-c1">imcorner</span>(img, threshold, percentile; [method])</pre></div>
+
+<p>The <code>method</code> argument takes in the name of the algorithm to be used to detect corners, namely <code>harris</code>, <code>shi_tomasi</code> and <code>kitchen_rosenfeld</code>.</p>
+
 <h3>
 <a id="fast-corners" class="anchor" href="#fast-corners" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAST Corners</h3>
 
 <p>FAST (Features from Accelerated Segment Test) corners, an efficient and very popular corner detection algorithm works by finding a contiguous set of pixels brighter or darker than the candidate pixel. Depending on the number of contiguous pixels found, the candidate is marked as a potential corner. </p>
 
-<h3>
-<a id="imagefeaturesjl-framework" class="anchor" href="#imagefeaturesjl-framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageFeatures.jl Framework</h3>
+<p>FAST corners may be detected by using the <code>fastcorners</code> API.</p>
 
-<p>I started work on ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. </p>
+<div class="highlight highlight-source-julia"><pre>corners <span class="pl-k">=</span> <span class="pl-c1">fastcorners</span>(img, n, threshold)</pre></div>
+
+<h3>
+<a id="imagefeaturesjl" class="anchor" href="#imagefeaturesjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageFeatures.jl</h3>
+
+<p>I started work on ImageFeatures.jl by adding texture matching descriptors like GLCMs (Gray Level Co-occurence Matrix) and LBPs (Local Binary Patterns). </p>
+
+<h3>
+<a id="gray-level-co-occurence-matrices" class="anchor" href="#gray-level-co-occurence-matrices" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gray Level Co Occurence Matrices</h3>
+
+<p>Gray Level Co-occurrence Matrix (GLCM) is used for texture analysis. We consider two pixels at a time, called the reference and the neighbour pixel. We define a particular spatial relationship between the reference and neighbour pixel before calculating the GLCM.</p>
+
+<p>The GLCM is calculated by calling one of <code>glcm</code>, <code>glcm_symmetric</code> or <code>glcm_norm</code> functions depending on the desired GLCM type. </p>
+
+<div class="highlight highlight-source-julia"><pre>glcm <span class="pl-k">=</span> <span class="pl-c1">glcm</span>(img, distance, angle, mat_size)</pre></div>
+
+<p>If multiple GLCMs need to be calculated, the same function may be used by passing a vector in the arguments. The <code>distance</code> and <code>angle</code> arguments take in both <code>Int</code> and <code>Vector{Int}</code> values.</p>
+
+<p>Multiple properties of the obtained GLCM can be calculated by using the <code>glcm_prof</code> function which calculates the property of the entire matrix or in windows if given the window dimensions.</p>
+
+<div class="highlight highlight-source-julia"><pre>prop <span class="pl-k">=</span> <span class="pl-c1">glcm_prop</span>(glcm, property)
+prop <span class="pl-k">=</span> <span class="pl-c1">glcm_prop</span>(glcm, height, width, property)</pre></div>
+
+<p>Various properties can be calculated like <code>mean</code>, <code>variance</code>, <code>correlation</code>, <code>contrast</code>, <code>IDM</code> (Inverse Difference Moment), <code>ASM</code> (Angular Second Moment), <code>entropy</code>, <code>max_prob</code> (Max Probability), <code>energy</code> and <code>dissimilarity</code>.</p>
+
+<h3>
+<a id="local-binary-patterns" class="anchor" href="#local-binary-patterns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Local Binary Patterns</h3>
+
+<p>Local Binary Pattern (LBP) is a very efficient texture operator which labels the pixels of an image by thresholding the neighborhood of each pixel and considers the result as a binary number. The feature vector can now then be processed using some machine-learning algorithm to classify images. Such classifiers are often used for face recognition or texture analysis.</p>
+
+<p>We have multiple type of LBP algorithms in ImageFeatures.jl :</p>
+
+<p>The first three methods can be used with both circular offsets (circle around the pixel) or the 8x8 neighbourhood.</p>
+
+<p>The first two methods, <code>lbp</code> and <code>modified_lbp</code> may be called with one of three <code>lbp_original</code>, <code>lbp_uniform</code> and <code>lbp_rotation_invariant</code> as the <code>method</code> argument which specifies the method used to create the bit pattern.</p>
+
+<ul>
+<li>
+<code>lbp</code> is the original algorithm defined in the `94 paper.</li>
+<li>
+<code>modified_lbp</code> is a version of LBP which compares the intensity of each pixel with the average intensity in the window.</li>
+<li>
+<code>direction_coded_lbp</code> is a version of LBP where the intensity differences along the four directions (N-S, NW-SE, NE-SW, E-W) are coded along with the variation in differences along the directions in 8 bits.</li>
+<li>
+<code>multi_block_lbp</code> is a version of LBP used for window matching as an alternative to Haar like features. The image is divided into blocks and the average intensity of each block is considered with the center block to obtain the LBP.</li>
+</ul>
+
+<div class="highlight highlight-source-julia"><pre>lbp_image <span class="pl-k">=</span> <span class="pl-c1">lbp</span>(img)
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">lbp</span>(img, <span class="pl-c1">10</span>, <span class="pl-c1">2</span>) <span class="pl-c"># With circular offsets</span>
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">lbp</span>(img_gray, lbp_uniform)
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">lbp</span>(img_gray, lbp_rotation_invariant)
+
+
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">modified_lbp</span>(img_gray)
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">modified_lbp</span>(img_gray, points, radius)
+
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">direction_coded_lbp</span>(img)
+lbp_image <span class="pl-k">=</span> <span class="pl-c1">direction_coded_lbp</span>(img, points, radius)
+
+pattern <span class="pl-k">=</span> <span class="pl-c1">multi_block_lbp</span>(img, top_left_y, top_left_x, height_block, width_block)</pre></div>
+
+<p>We can also create the descriptor from a histogram of LBPs over the image by calling <code>create_descriptor</code>.</p>
+
+<div class="highlight highlight-source-julia"><pre>desc <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, yblocks, xblocks, [lbp_type])</pre></div>
+
+<p>The <code>lbp_type</code> argument takes in one of the functions defined above, while the <code>yblocks</code> and <code>xblocks</code> arguments specify the size of the grid to create in the image.</p>
+
+<h3>
+<a id="framework" class="anchor" href="#framework" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Framework</h3>
+
+<p>Before starting with the feature descriptors, we decided on a easy to use common API which could be used with all the algorithms. </p>
 
 <p>The <code>Feature</code> and <code>Keypoint</code> types are the fundamental types in ImageFeatures.jl. <code>Feature</code> stores the <code>keypoint</code> and its <code>orientation</code> and <code>scale</code>. A vector of the <code>Feature</code> type is denoted by the <code>Features</code> type and similary a vector of <code>Keypoint</code> type is denoted by the <code>Keypoints</code> type. We provide multiple methods for easily transitioning between the two types. </p>
 
@@ -181,30 +277,45 @@ descriptor, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create
 
 <p>Depending on the algorithm , the <code>create_descriptor</code> API can be used to directly create a feature descriptor from the image (eg. ORB, BRISK) or from the keypoints (eg. BRIEF, FREAK). In case of the latter, the keypoints can be obtained using algorithms such as FAST or CENSURE. The <code>params</code> argument is dependent on the algorithm chosen and its type is the name of the algorithm. For eg. <code>brief_params &lt;: BRIEF</code></p>
 
+<p>A brief discussion on the various algorithms is given below. For more details on each of the algorithms, please visit the <a href="http://juliaimages.github.io/ImageFeatures.jl/latest/">documentation</a> for ImageFeatures.jl.</p>
+
 <h3>
 <a id="brief-descriptors" class="anchor" href="#brief-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BRIEF Descriptors</h3>
 
-<h3>
-<a id="gray-level-co-occurence-matrices" class="anchor" href="#gray-level-co-occurence-matrices" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gray Level Co Occurence Matrices</h3>
+<p>BRIEF (Binary Robust Independent Elementary Features) is an efficient feature point descriptor. It is highly discriminative even when using relatively few bits and is computed using simple intensity difference tests. BRIEF does not have a predefined sampling pattern and the pairs are chosen randomly.</p>
 
-<h3>
-<a id="local-binary-patterns" class="anchor" href="#local-binary-patterns" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Local Binary Patterns</h3>
+<div class="highlight highlight-source-julia"><pre>brief_params <span class="pl-k">=</span> <span class="pl-c1">BRIEF</span>(size <span class="pl-k">=</span> <span class="pl-c1">256</span>, window <span class="pl-k">=</span> <span class="pl-c1">10</span>, seed <span class="pl-k">=</span> <span class="pl-c1">123</span>)
+desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, brief_params)</pre></div>
 
 <h3>
 <a id="orb-keypoints-and-descriptors" class="anchor" href="#orb-keypoints-and-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ORB Keypoints and Descriptors</h3>
 
+<p>ORB (Oriented Fast and Rotated Brief) descriptor is similar to BRIEF but has an orientation detection mechanism. Apart from creating a descriptor, it also extracts keypoints over a gaussian pyramid using the FAST corners algorithm.</p>
+
+<p>It can be used by calling the ORB constructor method. </p>
+
+<div class="highlight highlight-source-julia"><pre>orb_params <span class="pl-k">=</span> <span class="pl-c1">ORB</span>(num_keypoints <span class="pl-k">=</span> <span class="pl-c1">1000</span>)
+desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, orb_params)</pre></div>
+
 <h3>
 <a id="censure-keypoints" class="anchor" href="#censure-keypoints" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>CENSURE Keypoints</h3>
+
+<p><em>Note : This PR is still open. The function needs more tests before it can be merged.</em></p>
+
+<p>CENSURE (CENter SURround Extremas) keypoints are calculated using extremas at all scales and locations unlike SIFT or SURF which take extremas at each octave. To approximate the Laplacian operator, a bi-level (1 or -1) centre surround filter is used. Increasing size of the filter in each octave gives the result of the operator at different scales. Points of maxima and minima across the octaves are extracted as keypoints.</p>
+
+<div class="highlight highlight-source-julia"><pre>censure_params <span class="pl-k">=</span> <span class="pl-c1">CENSURE</span>()
+keypoints <span class="pl-k">=</span> <span class="pl-c1">extract_features</span>(img, censure_params)</pre></div>
 
 <h3>
 <a id="brisk-descriptors" class="anchor" href="#brisk-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BRISK Descriptors</h3>
 
-<p>The BRISK () descriptor has a predefined sampling pattern as compared to BRIEF or ORB. Pixels are sampled over concentric rings. </p>
+<p>The BRISK (Binary Robust Invariant Scalable Keypoints) descriptor has a predefined sampling pattern as compared to BRIEF or ORB. Pixels are sampled over concentric rings. </p>
 
 <p>The BRISK descriptor can be used by calling the BRISK constructor method to define the parameters and then using it with the <code>create_descriptor</code> API. </p>
 
 <div class="highlight highlight-source-julia"><pre>brisk_params <span class="pl-k">=</span> <span class="pl-c1">BRISK</span>(pattern_scale <span class="pl-k">=</span> <span class="pl-c1">1.0</span>)
-desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img_array, keypoints, brisk_params)</pre></div>
+desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, brisk_params)</pre></div>
 
 <h3>
 <a id="freak-descriptors" class="anchor" href="#freak-descriptors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FREAK Descriptors</h3>
@@ -214,19 +325,46 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 <p>The FREAK descriptor can be used by calling the FREAK constructor method to define the parameters and then using it with the <code>create_descriptor</code> API. Unlike BRISK, FREAK does not calculate the keypoints.</p>
 
 <div class="highlight highlight-source-julia"><pre>freak_params <span class="pl-k">=</span> <span class="pl-c1">FREAK</span>(pattern_scale <span class="pl-k">=</span> <span class="pl-c1">22.0</span>)
-desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img_array, keypoints, freak_params)</pre></div>
+desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descriptor</span>(img, keypoints, freak_params)</pre></div>
 
 <h2>
 <a id="imagedrawjl" class="anchor" href="#imagedrawjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageDraw.jl</h2>
 
+<p>To help me understand how the feature detection algorithms were working, I needed a drawing library for Images in julia. Since it was already on the roadmap for JuliaImages, I developed proper APIs and created a new package, <a href="https://github.com/JuliaImages/ImageDraw.jl">ImageDraw.jl</a>. </p>
+
+<h3>
+<a id="lines" class="anchor" href="#lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Lines</h3>
+
+<p>The <code>line</code> and <code>line!</code> functions draw a line on the input image given the points p1, p2 as CartesianIndex{2} with the given <code>color</code>. Lines are drawn using the <code>bresenham</code> method by default. If anti-aliasing is required, the <code>xiaolin_wu</code> can be used. </p>
+
+<div class="highlight highlight-source-julia"><pre>img_with_line <span class="pl-k">=</span> <span class="pl-c1">line</span>(img, p1, p2, color, method)
+img_with_line <span class="pl-k">=</span> <span class="pl-c1">line</span>(img, y0, x0, y1, x1, color, method)</pre></div>
+
+<p>To draw a line on the input image itself, use the line! function.</p>
+
+<div class="highlight highlight-source-julia"><pre><span class="pl-c1">line!</span>(img, p1, p2, color, method)</pre></div>
+
+<h3>
+<a id="circles-and-ellipses" class="anchor" href="#circles-and-ellipses" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Circles and Ellipses</h3>
+
+<p>The <code>ellipse</code> and <code>ellipse!</code> (similar use as <code>line!</code>) draw an ellipse on the input image given the <code>center</code> as a <code>CartesianIndex{2}</code> or as coordinates <code>(y, x)</code> using the specified <code>color</code>. If <code>color</code> is not specified, <code>one(eltype(img))</code> is used.</p>
+
+<div class="highlight highlight-source-julia"><pre>img_with_ellipse <span class="pl-k">=</span> <span class="pl-c1">ellipse</span>(img, center, radiusy, radiusx)
+img_with_ellipse <span class="pl-k">=</span> <span class="pl-c1">ellipse</span>(img, center, color, radiusy, radiusx)
+img_with_ellipse <span class="pl-k">=</span> <span class="pl-c1">ellipse</span>(img, y, x, radiusy, radiusx)
+img_with_ellipse <span class="pl-k">=</span> <span class="pl-c1">ellipse</span>(img, y, x, color, radiusy, radiusx)</pre></div>
+
+<p>Similarly the <code>circle</code> and its counterpart <code>circle!</code> functions may be used to draw circles.</p>
+
+<div class="highlight highlight-source-julia"><pre>img_with_circle <span class="pl-k">=</span> <span class="pl-c1">circle</span>(img, center, radiusy, radiusx)
+img_with_circle <span class="pl-k">=</span> <span class="pl-c1">circle</span>(img, center, color, radiusy, radiusx)
+img_with_circle <span class="pl-k">=</span> <span class="pl-c1">circle</span>(img, y, x, radiusy, radiusx)
+img_with_circle <span class="pl-k">=</span> <span class="pl-c1">circle</span>(img, y, x, color, radiusy, radiusx)</pre></div>
+
 <h2>
 <a id="miscellaneous" class="anchor" href="#miscellaneous" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Miscellaneous</h2>
 
-<h3>
-<a id="colorvectorspacejl" class="anchor" href="#colorvectorspacejl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ColorVectorSpace.jl</h3>
-
-<h3>
-<a id="colortypesjl" class="anchor" href="#colortypesjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ColorTypes.jl</h3>
+<p>Apart from the work discussed above, I also made minor contributions to two related packages, <a href="https://github.com/JuliaGraphics/ColorVectorSpace.jl">ColorVectorSpace.jl</a> and <a href="https://github.com/JuliaGraphics/ColorTypes.jl">ColorTypes.jl</a></p>
 
 <h2>
 <a id="future-work" class="anchor" href="#future-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future Work</h2>
@@ -234,15 +372,10 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 <p>The BRISK and CENSURE PRs are yet to be merged. The BRISK PR is currently under review while the CENSURE one needs more tests before it can be merged. I hope to finish them before the GSoC period ends.</p>
 
 <p>I am also working on creating a set of tutorials on extracting features and using them to match images. The link to the tutorials can be found at the ImageFeatures.jl documentation <a href="http://juliaimages.github.io/ImageFeatures.jl/latest">website</a>.</p>
+      </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/mronian/gsoc-2016">Gsoc-2016</a> is maintained by <a href="https://github.com/mronian">mronian</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
   </body>
 </html>
