@@ -96,7 +96,7 @@ canny_edges = canny(img, sigma = 1.4, upperThreshold = 0.80, lowerThreshold = 0.
 
 Results of using the Canny edge detector on an image.
 
-![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/canny_example.jpg)
+![](https://github.com/mronian/gsoc-2016/blob/master/canny_example.jpg?raw=true)
 
 ### Corner Detection
 
@@ -122,7 +122,7 @@ corners = fastcorners(img, n, threshold)
 
 Results of using the FAST Corner detector on an image.
 
-![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/fast_example.jpg)
+![](https://github.com/mronian/gsoc-2016/blob/master/fast_example.jpg?raw=true)
 
 ### ImageFeatures.jl
 
