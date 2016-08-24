@@ -39,11 +39,23 @@
         </div>
 
         <h1>
-<a id="google-summer-of-code-2016" class="anchor" href="#google-summer-of-code-2016" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Google Summer of Code 2016</h1>
+<a id="google-summer-of-code-2016---the-julia-language" class="anchor" href="#google-summer-of-code-2016---the-julia-language" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Google Summer of Code 2016 - The Julia Language</h1>
 
-<p><sub><a href="#before-the-coding-period">Before the Coding Period</a> | <a href="#summary-of-contributions">Summary of Contributions</a> | <a href="#exposure-correction">Exposure Correction</a> | <a href="#feature-extraction">Feature Extraction</a> | <a href="#miscellaneous">Miscelleanous</a> | <a href="#future-work">Future Work</a></sub></p>
+<div align="center">
+<img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142" align="middle">
+</div>
+
+<p><sub><a href="#before-the-coding-period">Before the Coding Period</a> | <a href="#summary-of-contributions">Summary of Contributions</a> | <a href="#exposure-correction">Exposure Correction</a> | <a href="#feature-extraction">Feature Extraction</a> | <a href="#drawing-on-images">Drawing on Images</a> | <a href="#miscellaneous">Miscelleanous</a> | <a href="#future-work">Future Work</a></sub></p>
+
+<p>Whew. What an amazing summer it has been! It seems like just yesterday that I found myself among the lucky students who were selected for GSoC 2016. To make the news even more amazing, along with me 14 other students had been selected from my college! The efforts of previous GSoC alumni like <a href="https://github.com/hargup">Harsh</a> and <a href="https://github.com/abhishek-kakkar">Abhishek</a> to spread the culture of open source programming seemed to have paid off as this was a far cry from earlier years when only a handful of people used to participate. I can't thank both of them enough for helping me draft my proposal and giving valuable suggestions.</p>
 
 <p>My <a href="https://docs.google.com/document/d/1XD_fpT6YpyK6Iv2Rues2RlU-15l4aBbUZTSz1V216pw/edit?usp=sharing">proposal</a> for this summer was to work on <a href="https://github.com/JuliaImages/ImageFeatures.jl">ImageFeatures.jl</a>, a new Julia package for Feature Extraction and Descriptors in Images. Alongside this, I planned to add Exposure Correction functionality to <a href="https://github.com/timholy/Images.jl">Images.jl</a>, an existing package for Image Processing in Julia.</p>
+
+<p>One of the fun moments of the summer was getting a chance to attend JuliaCon 2016 at MIT, Boston! The Julia Language had generously invited all GSoCers to come and present their projects. My talk can be viewed below. Although I messed up the slides a bit and wasn't prepared for the talk, overall I guess it wasn't too shabby ;)</p>
+
+<div align="center">
+
+</div>
 
 <p>As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer and gotten the chance to work with amazing people in the <a href="https://github.com/JuliaImages">JuliaImages</a> organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.</p>
 
@@ -352,7 +364,7 @@ desc, ret_keypoints <span class="pl-k">=</span> <span class="pl-c1">create_descr
 <p><img src="http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/freak_example.jpg" alt=""></p>
 
 <h2>
-<a id="imagedrawjl" class="anchor" href="#imagedrawjl" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ImageDraw.jl</h2>
+<a id="drawing-on-images" class="anchor" href="#drawing-on-images" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Drawing on Images</h2>
 
 <p>To help me understand how the feature detection algorithms were working, I needed a drawing library for Images in julia. Since it was already on the roadmap for JuliaImages, I developed proper APIs and created a new package, <a href="https://github.com/JuliaImages/ImageDraw.jl">ImageDraw.jl</a>. </p>
 
@@ -393,7 +405,7 @@ img_with_circle <span class="pl-k">=</span> <span class="pl-c1">circle</span>(im
 <h2>
 <a id="future-work" class="anchor" href="#future-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future Work</h2>
 
-<p>The BRISK and CENSURE PRs are yet to be merged. The BRISK PR is currently under review while the CENSURE one needs more tests before it can be merged. I hope to finish them before the GSoC period ends.</p>
+<p>The CENSURE PR is yet to be merged as it needs more tests before it can be merged. I hope to finish it before the GSoC period ends.</p>
 
 <p>I am also working on creating a set of tutorials on extracting features and using them to match images. The link to the tutorials can be found at the ImageFeatures.jl documentation <a href="http://juliaimages.github.io/ImageFeatures.jl/latest">website</a>.</p>
       </section>
