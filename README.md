@@ -1,7 +1,7 @@
 # Google Summer of Code 2016 - The Julia Language
 
 <div align="center">
-<img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142" align="middle"></img>
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Julia_prog_language.svg/2000px-Julia_prog_language.svg.png" alt="Julia Logo" width="210" height="142" align="middle"></img>
 </div>
 
  <sub>[Before the Coding Period](#before-the-coding-period) | [Summary of Contributions](#summary-of-contributions) | [Exposure Correction](#exposure-correction) | [Feature Extraction](#feature-extraction) | [Drawing on Images](#drawing-on-images) | [Miscelleanous](#miscellaneous) | [Future Work](#future-work)</sub>
