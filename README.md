@@ -1,8 +1,20 @@
-# Google Summer of Code 2016
+# Google Summer of Code 2016 - The Julia Language
 
-<sub>[Before the Coding Period](#before-the-coding-period) | [Summary of Contributions](#summary-of-contributions) | [Exposure Correction](#exposure-correction) | [Feature Extraction](#feature-extraction) | [Miscelleanous](#miscellaneous) | [Future Work](#future-work)</sub>
+<div align="center">
+<img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142" align="middle"></img>
+</div>
+
+<sub>[Before the Coding Period](#before-the-coding-period) | [Summary of Contributions](#summary-of-contributions) | [Exposure Correction](#exposure-correction) | [Feature Extraction](#feature-extraction) | [Drawing on Images](#drawing-on-images) | [Miscelleanous](#miscellaneous) | [Future Work](#future-work)</sub>
+
+Whew. What an amazing summer it has been! It seems like just yesterday that I found myself among the lucky students who were selected for GSoC 2016. To make the news even more amazing, along with me 14 other students had been selected from my college! The efforts of previous GSoC alumni like [Harsh](https://github.com/hargup) and [Abhishek](https://github.com/abhishek-kakkar) to spread the culture of open source programming seemed to have paid off as this was a far cry from earlier years when only a handful of people used to participate. I can't thank both of them enough for helping me draft my proposal and giving valuable suggestions.
 
 My [proposal](https://docs.google.com/document/d/1XD_fpT6YpyK6Iv2Rues2RlU-15l4aBbUZTSz1V216pw/edit?usp=sharing) for this summer was to work on [ImageFeatures.jl](https://github.com/JuliaImages/ImageFeatures.jl), a new Julia package for Feature Extraction and Descriptors in Images. Alongside this, I planned to add Exposure Correction functionality to [Images.jl](https://github.com/timholy/Images.jl), an existing package for Image Processing in Julia.
+
+One of the fun moments of the summer was getting a chance to attend JuliaCon 2016 at MIT, Boston! The Julia Language had generously invited all GSoCers to come and present their projects. My talk can be viewed below. Although I messed up the slides a bit and wasn't prepared for the talk, overall I guess it wasn't too shabby ;)
+
+<div align = "center">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/XNldTC0i4qY" frameborder="0" allowfullscreen></iframe>
+</div>
 
 As we reach the final week of GSoC, it feels great to have managed to achieve most of my goals for the summer and gotten the chance to work with amazing people in the [JuliaImages](https://github.com/JuliaImages) organisation as we attempt to develop a full fledged Computer Vision library of which ImageFeatures.jl is an essential part. I hope to continue to work and contribute more packages above and beyond GSoC as we slowly build up the organisation.
 
@@ -284,7 +296,7 @@ Results of using the FREAK descriptor on a translated and rotated image.
 
 ![](http://juliaimages.github.io/ImageFeatures.jl/latest/tutorials/freak_example.jpg)
 
-## ImageDraw.jl
+## Drawing on Images
 
 To help me understand how the feature detection algorithms were working, I needed a drawing library for Images in julia. Since it was already on the roadmap for JuliaImages, I developed proper APIs and created a new package, [ImageDraw.jl](https://github.com/JuliaImages/ImageDraw.jl). 
 
@@ -329,6 +341,6 @@ Apart from the work discussed above, I also made minor contributions to two rela
 
 ## Future Work
 
-The BRISK and CENSURE PRs are yet to be merged. The BRISK PR is currently under review while the CENSURE one needs more tests before it can be merged. I hope to finish them before the GSoC period ends.
+The CENSURE PR is yet to be merged as it needs more tests before it can be merged. I hope to finish it before the GSoC period ends.
 
 I am also working on creating a set of tutorials on extracting features and using them to match images. The link to the tutorials can be found at the ImageFeatures.jl documentation [website](http://juliaimages.github.io/ImageFeatures.jl/latest).
