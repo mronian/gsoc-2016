@@ -4,9 +4,7 @@
 <img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142" align="middle"></img>
 </div>
 
-<div align = "center">
-<sub>[Before the Coding Period](#before-the-coding-period) | [Summary of Contributions](#summary-of-contributions) | [Exposure Correction](#exposure-correction) | [Feature Extraction](#feature-extraction) | [Drawing on Images](#drawing-on-images) | [Miscelleanous](#miscellaneous) | [Future Work](#future-work)</sub>
-</div>
+ <sub>[Before the Coding Period](#before-the-coding-period) | [Summary of Contributions](#summary-of-contributions) | [Exposure Correction](#exposure-correction) | [Feature Extraction](#feature-extraction) | [Drawing on Images](#drawing-on-images) | [Miscelleanous](#miscellaneous) | [Future Work](#future-work)</sub>
 
 Whew. What an amazing summer it has been! It seems like just yesterday that I found myself among the lucky students who were selected for GSoC 2016. To make the news even more amazing, along with me 14 other students had been selected from my college! The efforts of previous GSoC alumni like [Harsh](https://github.com/hargup) and [Abhishek](https://github.com/abhishek-kakkar) to spread the culture of open source programming seemed to have paid off as this was a far cry from earlier years when only a handful of people used to participate. I can't thank both of them enough for helping me draft my proposal and giving valuable suggestions.
 
