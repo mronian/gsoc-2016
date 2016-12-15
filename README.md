@@ -341,6 +341,4 @@ Apart from the work discussed above, I also made minor contributions to two rela
 
 ## Future Work
 
-The CENSURE PR is yet to be merged as it needs more tests before it can be merged. I hope to finish it before the GSoC period ends.
-
-I am also working on creating a set of tutorials on extracting features and using them to match images. The link to the tutorials can be found at the ImageFeatures.jl documentation [website](http://juliaimages.github.io/ImageFeatures.jl/latest).
+I am working on creating a set of tutorials on extracting features and using them to match images. The link to the tutorials can be found at the ImageFeatures.jl documentation [website](http://juliaimages.github.io/ImageFeatures.jl/latest).
